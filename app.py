@@ -6,17 +6,18 @@ from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
-from sqlalchemy.dialects import registry
+import sqlalchemy
+from sqlalchemy.dialects import postgresql
 
-# Manually register the PostgreSQL dialect
-registry.register("postgresql", "psycopg2", "PGDialect_psycopg2")
+# Register the PostgreSQL dialect
+sqlalchemy.dialects.registry.register("postgresql", "psycopg2", "PGDialect_psycopg2")
 
 app = Flask(__name__)
 app.config['OAUTH2_PROVIDER_TOKEN_EXPIRES_IN'] = 3600  
 app.config['OAUTH2_PROVIDER_REFRESH_TOKEN_EXPIRES_IN'] = 86400  
 
 # Use environment variable for the database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgres://haytam:0KA6TACyrbgKAFVcVYPGAU4zJNYAxGdn@dpg-cp4bc7779t8c73edjb50-a/oauth_tc1g')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://oauth_user:yourpassword@localhost:5432/oauth_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
