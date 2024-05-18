@@ -12,7 +12,9 @@ app.config['OAUTH2_PROVIDER_TOKEN_EXPIRES_IN'] = 3600
 app.config['OAUTH2_PROVIDER_REFRESH_TOKEN_EXPIRES_IN'] = 86400  
 
 # Use environment variable for the database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://haytam:0KA6TACyrbgKAFVcVYPGAU4zJNYAxGdn@dpg-cp4bc7779t8c73edjb50-a/oauth_tc1g')
+database_uri = os.getenv('DATABASE_URL', 'postgresql://haytam:0KA6TACyrbgKAFVcVYPGAU4zJNYAxGdn@dpg-cp4bc7779t8c73edjb50-a/oauth_tc1g')
+logging.info(f"Using database URI: {database_uri}")
+app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -55,6 +57,7 @@ def verify_token(token, max_age=None):
 def init_db():
     try:
         db.create_all()
+        logging.info("Database tables created successfully.")
         return jsonify({"message": "Database initialized!"})
     except Exception as e:
         logging.error(f"Error initializing database: {str(e)}")
@@ -143,6 +146,10 @@ def refresh_token():
 if __name__ == '__main__':
     # Initialize the database if running directly
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+            logging.info("Database tables created successfully on startup.")
+        except Exception as e:
+            logging.error(f"Error creating database tables on startup: {str(e)}")
     
     app.run(debug=True, host='0.0.0.0', port=5000)
