@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
 import sqlalchemy
-from sqlalchemy.dialects import postgresql
 
 # Register the PostgreSQL dialect
 sqlalchemy.dialects.registry.register("postgresql", "psycopg2", "PGDialect_psycopg2")
