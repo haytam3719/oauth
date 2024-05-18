@@ -3,8 +3,6 @@ from itsdangerous import URLSafeSerializer, BadSignature, SignatureExpired
 import uuid
 import time
 from datetime import datetime, timedelta
-import firebase_admin
-from firebase_admin import credentials, auth
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -48,6 +46,11 @@ def verify_token(token, max_age=None):
     except BadSignature:
         return None  # Invalid token
     return data['token']
+
+@app.route('/init_db', methods=['POST'])
+def init_db():
+    db.create_all()
+    return jsonify({"message": "Database initialized!"})
 
 @app.route('/oauth/token', methods=['POST'])
 def access_token():
@@ -123,4 +126,8 @@ def refresh_token():
     return jsonify(error='invalid_refresh_token'), 401
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Initialize the database if running directly
+    with app.app_context():
+        db.create_all()
+    
+    app.run(debug=True, host='0.0.0.0', port=10003)
