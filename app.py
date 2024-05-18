@@ -6,6 +6,10 @@ from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
+from sqlalchemy.dialects import registry
+
+# Manually register the PostgreSQL dialect
+registry.register("postgresql", "psycopg2", "PGDialect_psycopg2")
 
 app = Flask(__name__)
 app.config['OAUTH2_PROVIDER_TOKEN_EXPIRES_IN'] = 3600  
