@@ -11,7 +11,7 @@ app.config['OAUTH2_PROVIDER_TOKEN_EXPIRES_IN'] = 3600
 app.config['OAUTH2_PROVIDER_REFRESH_TOKEN_EXPIRES_IN'] = 86400  
 
 # Use environment variable for the database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///oauth.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgres://haytam:0KA6TACyrbgKAFVcVYPGAU4zJNYAxGdn@dpg-cp4bc7779t8c73edjb50-a/oauth_tc1g')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
