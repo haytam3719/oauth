@@ -1,22 +1,23 @@
+import os
 from flask import Flask, request, jsonify
 from itsdangerous import URLSafeSerializer, BadSignature, SignatureExpired
 import uuid
 import time
 from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
-import os
 import logging
-import sqlalchemy
 
-# Register the PostgreSQL dialect
-sqlalchemy.dialects.registry.register("postgresql", "psycopg2", "PGDialect_psycopg2")
+# Fix the DATABASE_URL if it uses the deprecated 'postgres://' scheme
+database_url = os.getenv('DATABASE_URL')
+if database_url and database_url.startswith('postgres://'):
+    os.environ['DATABASE_URL'] = database_url.replace('postgres://', 'postgresql://', 1)
 
 app = Flask(__name__)
 app.config['OAUTH2_PROVIDER_TOKEN_EXPIRES_IN'] = 3600  
 app.config['OAUTH2_PROVIDER_REFRESH_TOKEN_EXPIRES_IN'] = 86400  
 
 # Use environment variable for the database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://haytam:0KA6TACyrbgKAFVcVYPGAU4zJNYAxGdn@dpg-cp4bc7779t8c73edjb50-a/oauth_tc1g')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://oauth_user:yourpassword@localhost:5432/oauth_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
