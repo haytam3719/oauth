@@ -2,15 +2,18 @@ from flask import Flask, request, jsonify
 from itsdangerous import URLSafeSerializer, BadSignature, SignatureExpired
 import uuid
 import time
+from datetime import datetime, timedelta
 import firebase_admin
 from firebase_admin import credentials, auth
-from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
 app.config['OAUTH2_PROVIDER_TOKEN_EXPIRES_IN'] = 3600  
 app.config['OAUTH2_PROVIDER_REFRESH_TOKEN_EXPIRES_IN'] = 86400  
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/Haytam/Desktop/comptesRendusStage/oauth.db'
+
+# Use environment variable for the database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///oauth.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
